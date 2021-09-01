@@ -18,7 +18,6 @@ public class Player : MonoBehaviour
     [Range(0.1f, 10.0f)] [SerializeField] private float _mouseXSensitivity;
     [Range(0.1f, 10.0f)] [SerializeField] private float _mouseYSensitivity;
     
-
     private float _playersYVelocity;
 
 

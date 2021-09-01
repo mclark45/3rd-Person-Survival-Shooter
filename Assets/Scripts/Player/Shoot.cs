@@ -18,7 +18,17 @@ public class Shoot : MonoBehaviour
             RaycastHit hitInfo;
 
             if (Physics.Raycast(rayOrigin, out hitInfo))
-                Debug.Log(hitInfo.transform.name);
+            {
+                if (hitInfo.transform.tag == "Enemy")
+                {
+                    IDamageable hit = hitInfo.transform.GetComponent<IDamageable>();
+
+                    if (hit != null)
+                    {
+                        hit.Damage();
+                    }
+                }
+            }       
         }
     }
 }
