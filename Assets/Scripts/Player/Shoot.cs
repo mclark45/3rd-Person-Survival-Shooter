@@ -26,6 +26,7 @@ public class Shoot : MonoBehaviour
                     if (hit != null)
                     {
                         hit.Damage();
+                        Debug.Log("Health: " + hit.Health);
                     }
                 }
             }       

@@ -64,6 +64,11 @@ public class EnemyAI : MonoBehaviour, IDamageable
 
     public void Damage()
     {
-        Debug.Log("Enemy Hit");
+        Health--;
+
+        if (Health == 0)
+        {
+            Destroy(this.gameObject);
+        }
     }
 }
