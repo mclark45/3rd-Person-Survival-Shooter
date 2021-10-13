@@ -4,14 +4,25 @@ using UnityEngine;
 
 public class EnemyAI : MonoBehaviour, IDamageable
 {
+    public enum EnemyState
+    {
+        Idle,
+        Chase,
+        Attack
+    }
+
+    [SerializeField] private EnemyState _currentState;
     private CharacterController _enemyAI;
     private Player _playerScript;
+    private IDamageable _hit;
 
     public float Health { get; set; }
 
     [Header("Enemy Stats")]
     [SerializeField] private int _health = 5;
     [SerializeField] private float _speed = 5f;
+    [SerializeField] private float _attackDelay = 2.0f;
+    private float _nextAttack = -1;
 
     [Header("Physics")]
     [SerializeField] private float _gravityValue = 9.81f;
@@ -22,21 +33,25 @@ public class EnemyAI : MonoBehaviour, IDamageable
     void Start()
     {
         Health = _health;
+        _currentState = EnemyState.Chase;
         _enemyAI = GetComponent<CharacterController>();
         _playerScript = GameObject.FindGameObjectWithTag("Player").GetComponent<Player>();
+        _hit = GameObject.FindGameObjectWithTag("Player").GetComponent<IDamageable>();
 
         if (_enemyAI == null)
             Debug.LogError("Enemy Script is Null");
 
         if (_playerScript == null)
             Debug.LogError("Player Script is Null");
+
+        if (_hit == null)
+            Debug.LogError("Player IDamagable Interface is Null");
     }
 
     private void Update()
     {
-        EnemyMovement();
+        Attack();
     }
-
 
     private void EnemyMovement()
     {
@@ -44,11 +59,7 @@ public class EnemyAI : MonoBehaviour, IDamageable
         Vector3 velocity = direction * _speed;
         float _gravity = _gravityValue * _gravityMultiplier * Time.deltaTime;
 
-        if (_enemyAI.isGrounded)
-        {
-
-        }
-        else
+        if (_enemyAI.isGrounded == false)
         {
             _enemiesYVelocity -= _gravity;
         }
@@ -62,13 +73,47 @@ public class EnemyAI : MonoBehaviour, IDamageable
         _enemyAI.Move(velocity * Time.deltaTime);
     }
 
+    private void Attack()
+    {
+        switch (_currentState)
+        {
+            case EnemyState.Idle:
+                break;
+
+            case EnemyState.Chase:
+                EnemyMovement();
+                break;
+
+            case EnemyState.Attack:
+                if (Time.time > _nextAttack)
+                {
+                    _hit.Damage();
+                    _nextAttack = Time.time + _attackDelay;
+                }
+                break;
+
+            default:
+                break;
+        }
+    }
+
+    private void OnTriggerEnter(Collider other)
+    {
+        if (other.tag == "Player")
+            _currentState = EnemyState.Attack;
+    }
+
+    private void OnTriggerExit(Collider other)
+    {
+        if (other.tag == "Player")
+            _currentState = EnemyState.Chase;
+    }
+
     public void Damage()
     {
         Health--;
 
         if (Health == 0)
-        {
             Destroy(this.gameObject);
-        }
     }
 }

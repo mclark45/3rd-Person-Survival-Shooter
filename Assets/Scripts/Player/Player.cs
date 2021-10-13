@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Player : MonoBehaviour
+public class Player : MonoBehaviour, IDamageable
 {
     private CharacterController _playerController;
     [Header("Movement")]
@@ -20,9 +20,13 @@ public class Player : MonoBehaviour
     
     private float _playersYVelocity;
 
+    private int _health = 5;
+    public float Health { get; set; }
 
-    void Start()
+    private void Awake()
     {
+        Health = _health;
+
         _playerController = GetComponent<CharacterController>();
         _playerCamera = Camera.main;
 
@@ -35,9 +39,12 @@ public class Player : MonoBehaviour
 
     void Update()
     {
-        CameraControls();
-        CursorLock();
-        PlayerMovement();
+        if (Time.timeScale != 0)
+        {
+            CameraControls();
+            CursorLock();
+            PlayerMovement();
+        }
     }
 
     private void PlayerMovement()
@@ -88,5 +95,18 @@ public class Player : MonoBehaviour
 
         if (Input.GetKeyDown(KeyCode.Escape))
             Cursor.lockState = CursorLockMode.None;
+    }
+
+    public void Damage()
+    {
+        Health--;
+
+        Debug.Log("Player Health: " + Health);
+        if (Health == 0)
+        {
+            Time.timeScale = 0;
+            Debug.Log("Player is Dead!!! GAME OVER!!!");
+            Cursor.lockState = CursorLockMode.None;
+        }
     }
 }

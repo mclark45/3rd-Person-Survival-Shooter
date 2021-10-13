@@ -26,7 +26,7 @@ public class Shoot : MonoBehaviour
                     if (hit != null)
                     {
                         hit.Damage();
-                        Debug.Log("Health: " + hit.Health);
+                        Debug.Log("Enemy Health: " + hit.Health);
                     }
                 }
             }       
