@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class Shoot : MonoBehaviour
 {
+    [SerializeField] private GameObject _bloodSplatter;
     void Update()
     {
         Fire();
@@ -17,7 +18,7 @@ public class Shoot : MonoBehaviour
             Ray rayOrigin = Camera.main.ViewportPointToRay(centerOfScreen);
             RaycastHit hitInfo;
 
-            if (Physics.Raycast(rayOrigin, out hitInfo))
+            if (Physics.Raycast(rayOrigin, out hitInfo, Mathf.Infinity, 1 << 9))
             {
                 if (hitInfo.transform.tag == "Enemy")
                 {
@@ -26,6 +27,8 @@ public class Shoot : MonoBehaviour
                     if (hit != null)
                     {
                         hit.Damage();
+                        GameObject blood = Instantiate(_bloodSplatter, hitInfo.point, Quaternion.LookRotation(hitInfo.normal));
+                        Destroy(blood, 0.2f);
                         Debug.Log("Enemy Health: " + hit.Health);
                     }
                 }

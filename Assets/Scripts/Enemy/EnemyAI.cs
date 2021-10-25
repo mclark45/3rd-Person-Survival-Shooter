@@ -56,24 +56,28 @@ public class EnemyAI : MonoBehaviour, IDamageable
     private void EnemyMovement()
     {
         Vector3 direction = _playerScript.transform.position - transform.position;
+        direction.y = 0f;
+        direction.Normalize();
         Vector3 velocity = direction * _speed;
         float _gravity = _gravityValue * _gravityMultiplier * Time.deltaTime;
 
-        if (_enemyAI.isGrounded == false)
+        if (_enemyAI.isGrounded)
+        {
+            
+        }
+        else if (!_enemyAI.isGrounded)
         {
             _enemiesYVelocity -= _gravity;
         }
 
         velocity.y = _enemiesYVelocity;
 
-        velocity.Normalize();
-
-        transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.LookRotation(velocity), _speed * Time.deltaTime);
+        transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.LookRotation(direction), _speed * Time.deltaTime);
 
         _enemyAI.Move(velocity * Time.deltaTime);
     }
 
-    private void Attack()
+    public void Attack()
     {
         switch (_currentState)
         {
@@ -97,16 +101,14 @@ public class EnemyAI : MonoBehaviour, IDamageable
         }
     }
 
-    private void OnTriggerEnter(Collider other)
+    public void StartAttack()
     {
-        if (other.tag == "Player")
-            _currentState = EnemyState.Attack;
+        _currentState = EnemyState.Attack;
     }
 
-    private void OnTriggerExit(Collider other)
+    public void StopAttack()
     {
-        if (other.tag == "Player")
-            _currentState = EnemyState.Chase;
+        _currentState = EnemyState.Chase;
     }
 
     public void Damage()
