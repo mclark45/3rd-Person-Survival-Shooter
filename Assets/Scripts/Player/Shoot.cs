@@ -28,7 +28,8 @@ public class Shoot : MonoBehaviour
                     {
                         hit.Damage();
                         GameObject blood = Instantiate(_bloodSplatter, hitInfo.point, Quaternion.LookRotation(hitInfo.normal));
-                        Destroy(blood, 0.2f);
+                        Destroy(blood, 0.05f);
+                        //create an object pool for the bloodsplatter animation
                         Debug.Log("Enemy Health: " + hit.Health);
                     }
                 }
