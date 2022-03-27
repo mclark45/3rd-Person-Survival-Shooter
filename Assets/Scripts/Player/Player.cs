@@ -85,8 +85,8 @@ public class Player : MonoBehaviour, IDamageable
 
         Vector3 currentCameraRotation = _playerCamera.gameObject.transform.localEulerAngles;
         currentCameraRotation.x -= mouseY * _mouseYSensitivity;
-        currentCameraRotation.x = Mathf.Clamp(currentCameraRotation.x, 0f, 25f);
-        _playerCamera.gameObject.transform.localRotation = Quaternion.AngleAxis(Mathf.Clamp(currentCameraRotation.x, 0f, 25f), Vector3.right);
+        //currentCameraRotation.x = Mathf.Clamp(currentCameraRotation.x, 0f, 25f);
+        //_playerCamera.gameObject.transform.localRotation = Quaternion.AngleAxis(Mathf.Clamp(currentCameraRotation.x, 0f, 25f), Vector3.right);
     }
 
     private void CursorLock()
